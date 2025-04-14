@@ -28,6 +28,9 @@ from parsing import (
     filter_suggestions
 )
 
+from response import generate_completion
+from preprocess import extract_info
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
@@ -197,52 +200,9 @@ def query():
     doc = content['doc']
     results = parse_prompt(example_text + doc, max_tokens, context_window_size)
     prompt = results['effective_prompt']
-
-    # Query GPT-3
-    try:
-        if "---" in prompt: # If the demarcation is there, then suggest an insertion
-            prompt, suffix = prompt.split("---")
-            response = openai.Completion.create(
-                engine=engine,
-                prompt=prompt,
-                suffix=suffix,
-                n=n,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                presence_penalty=presence_penalty,
-                frequency_penalty=frequency_penalty,
-                logprobs=10,
-                stop=stop_sequence,
-            )
-        else:
-            response = openai.Completion.create(
-                engine=engine,
-                prompt=prompt,
-                n=n,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                presence_penalty=presence_penalty,
-                frequency_penalty=frequency_penalty,
-                logprobs=10,
-                stop=stop_sequence,
-            )
-        suggestions = []
-        for choice in response['choices']:
-            suggestion = parse_suggestion(
-                choice.text,
-                results['after_prompt'],
-                stop_rules
-            )
-            probability = parse_probability(choice.logprobs)
-            suggestions.append((suggestion, probability, engine))
-    except Exception as e:
-        results['status'] = FAILURE
-        results['message'] = str(e)
-        print(e)
-        return jsonify(results)
-
+    
+    suggestions = generate_completion(df, vectors, prompt)
+    
     # Always return original model outputs
     original_suggestions = []
     for index, (suggestion, probability, source) in enumerate(suggestions):
@@ -373,8 +333,8 @@ if __name__ == '__main__':
 
     # Read and set API keys
     global api_keys
-    api_keys = read_api_keys(config_dir)
-    openai.api_key = api_keys[('openai', 'default')]
+    # api_keys = read_api_keys(config_dir)
+    # openai.api_key = api_keys[('openai', 'default')]
 
     # Read examples (hidden prompts), prompts, and a blocklist
     global examples, prompts, blocklist
@@ -399,6 +359,14 @@ if __name__ == '__main__':
     global verbose
     verbose = args.verbose
 
+    # load papers
+    global df, vectors
+    search_folder = "../contents/files/"
+    contents_path = "../contents/"
+
+    df, vectors = extract_info(search_folder, contents_path)
+    
+    
     app.run(
         host='0.0.0.0',
         port=args.port,
