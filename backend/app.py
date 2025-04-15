@@ -13,7 +13,7 @@ from time import time
 from argparse import ArgumentParser
 
 from response import generate_completion
-from rag_response import generate_completion_rag
+from rag_response import generate_completion_rag, generate_completion_zero_shot
 from preprocess import extract_info
 
 from flask import Flask, request, jsonify
@@ -28,16 +28,22 @@ CORS(app)  # For Access-Control-Allow-Origin
 SUCCESS = True
 FAILURE = False
 
-@app.route('/api/query', methods=['POST'])
+@app.route('/api/suggestions', methods=['POST'])
 @cross_origin(origin='*')
-def query():
+def suggestions():
     content = request.json
     
     text = content['text']
-    
+    max_suggestions = content['maximumSuggestions']
     # suggestions = generate_completion(df, vectors, prompt)
-    suggestions = generate_completion_rag(text)
+    if content["useRAG"]:
+        suggestions = generate_completion_rag(text, max_suggestions)
+    else:
+        suggestions = generate_completion_zero_shot(text, max_suggestions)
     
+    suggestions = [{"content": suggestion} for suggestion in suggestions]
+    
+    print(suggestions)
     return jsonify({
         'success': SUCCESS,
         'data': suggestions

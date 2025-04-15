@@ -33,7 +33,7 @@ def get_abstract_summary(text, engine):
     
     return abstract_summary
 
-def generate_response(paragraph, abstract, engine):
+def generate_response(paragraph, abstract, engine, max_suggestions):
     
     nodes = retriever.retrieve(abstract + " " + paragraph)
     context = [f"{node.metadata}: " + node.get_content() + "\n\n" for node in nodes]
@@ -46,7 +46,7 @@ def generate_response(paragraph, abstract, engine):
     {context}
     
     You should only suggest 1 sentence.
-    Give at least 3 and at most 5 suggestions.
+    Give {max_suggestions} suggestions.
     """
     
     message = f"""
@@ -68,14 +68,14 @@ def generate_response(paragraph, abstract, engine):
     print(completion)
     
     message = completion.choices[0].message
-    if len(message.parsed.suggestion) > 5:
-        suggestions = message.parsed.suggestion[:5]
+    if len(message.parsed.suggestion) > max_suggestions:
+        suggestions = message.parsed.suggestion[:max_suggestions]
     else:
         suggestions = message.parsed.suggestion
         
     return suggestions
 
-def generate_completion_rag(text, engine = "gpt-4o-mini-2024-07-18"):
+def generate_completion_rag(text, max_suggestions, engine = "gpt-4o-mini-2024-07-18"):
     """
     Get the response from the RAG model.
     """
@@ -85,12 +85,51 @@ def generate_completion_rag(text, engine = "gpt-4o-mini-2024-07-18"):
     
     # Generate the response
     current_paragraph = text.split("\n\n")[-1]
-    suggestions = generate_response(current_paragraph, abstract_summary, engine)
+    suggestions = generate_response(current_paragraph, abstract_summary, engine, max_suggestions)
     
-    probabilities = [random.random() for _ in range(len(suggestions))]
-    engines = [engine for _ in range(len(suggestions))]
+    # probabilities = [random.random() for _ in range(len(suggestions))]
+    # engines = [engine for _ in range(len(suggestions))]
     
-    return list(zip(suggestions, probabilities, engines))
+    # return list(zip(suggestions, probabilities, engines))
+    
+    return suggestions
+
+def generate_completion_zero_shot(text, max_suggestions, engine = "gpt-4o-mini-2024-07-18"):
+    """
+    Get the response from the zero-shot model.
+    """
+    
+    prompt = f"""
+    You are a text generator. Continue the sentence, or suggest next sentence if the sentence is already complete. The suggested text will be added to the end of the sentence.
+    
+    You should only suggest 1 sentence.
+    Give {max_suggestions} suggestions.
+    """
+    
+    message = f"""
+    {text}
+    """
+    
+    if text[-1] != ".":
+        prompt += f"continue after this word: {message.split()[-1]}"
+    
+    completion = client.beta.chat.completions.parse(
+        model=engine,
+        messages=[
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": message}
+        ],
+        temperature=0.2,
+        response_format=Suggestions
+    )
+    
+    message = completion.choices[0].message
+    if len(message.parsed.suggestion) > max_suggestions:
+        suggestions = message.parsed.suggestion[:max_suggestions]
+    else:
+        suggestions = message.parsed.suggestion
+        
+    return suggestions
 
 if __name__ == "__main__":
     text = "In this paper, we propose a new method for image classification. The method is based on a convolutional neural network (CNN) architecture. We evaluate the performance of our method on several benchmark datasets."
