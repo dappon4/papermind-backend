@@ -29,6 +29,7 @@ from parsing import (
 )
 
 from response import generate_completion
+from rag_response import generate_completion_rag
 from preprocess import extract_info
 
 from flask import Flask, request, jsonify
@@ -201,7 +202,8 @@ def query():
     results = parse_prompt(example_text + doc, max_tokens, context_window_size)
     prompt = results['effective_prompt']
     
-    suggestions = generate_completion(df, vectors, prompt)
+    # suggestions = generate_completion(df, vectors, prompt)
+    suggestions = generate_completion_rag(prompt)
     
     # Always return original model outputs
     original_suggestions = []
@@ -364,7 +366,7 @@ if __name__ == '__main__':
     search_folder = "../contents/files/"
     contents_path = "../contents/"
 
-    df, vectors = extract_info(search_folder, contents_path)
+    # df, vectors = extract_info(search_folder, contents_path)
     
     
     app.run(

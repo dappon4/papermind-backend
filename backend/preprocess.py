@@ -30,7 +30,7 @@ def calculatee_hash(text):
     h.update(text.encode('utf-8'))
     return h.hexdigest()
 
-def extract_paper_content(text, client):
+def extract_paper_content(text):
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-mini-2024-07-18",
         messages=[
@@ -83,7 +83,7 @@ def extract_info(search_folder, contents_path):
                     new_vectors.append(get_embeddings(original_df.loc[idx]['abstract']))
                 
             else:
-                message = extract_paper_content(text, client)
+                message = extract_paper_content(text)
                 # Add new entry to the new DataFrame
                 new_entry = {
                     "path": pdf_path,
