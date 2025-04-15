@@ -78,6 +78,9 @@ def select_labels(text, engine):
     message = completion.choices[0].message
     labels = message.parsed.labels
     labels = [label.label for label in labels if label.label in valid_labels]
+    labels.extend(["title", "author", "year"])  # Always include title and author and year
+    labels = list(set(labels))  # Remove duplicates
+    print(labels)
     return labels
 
 def retrieve_summary(abstract, labels, df, vectors):
@@ -94,11 +97,15 @@ def retrieve_summary(abstract, labels, df, vectors):
 
 def generate_response(text, engine):
     prompt = f"""
-    You are a text generator. Complete the sentence, or suggest next sentence if the sentence is already complete. The suggested text will be added to the end of the sentence.
+    You are a text generator. Continue the sentence, or suggest next sentence if the sentence is already complete. The suggested text will be added to the end of the sentence.
+    When mentioning other papers, use MLA format to cite them.
     You should only suggest 1 sentence.
     Give at least 3 and at most 5 suggestions.
     text: {text}
     """
+    
+    if text[-1] != ".":
+        prompt += f"continue after this word: {text.split()[-1]}"
     
     completion = client.beta.chat.completions.parse(
         model=engine,
@@ -123,13 +130,17 @@ def generate_response_with_abstract(retrieved_df, text, engine):
     
     prompt = f"""
     You are a text generator. You are given a table with the following columns: {retrieved_df.columns}.
-    Use those information to complete the sentence. The suggested text will be added to the end of the text.
+    Use those information to continue the sentence. The suggested text will be added to the end of the text.
     You should only suggest 1 sentence.
     Give at least 3 and at most 5 suggestions.
-    text: {text}
     
     table: {retrieved_df.to_dict(orient='records')}
+    
+    text: {text}
     """
+    
+    if text[-1] != ".":
+        prompt += f"continue after this word: {text.split()[-1]}"
     
     completion = client.beta.chat.completions.parse(
         model=engine,
