@@ -12,10 +12,6 @@ class Suggestions(BaseModel):
 
 load_dotenv()
 
-storage_context = StorageContext.from_defaults(persist_dir="../contents/indexes")
-index = load_index_from_storage(storage_context)
-retriever = index.as_retriever(similarity_top_k=3)
-
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 def get_abstract_summary(text, engine):
@@ -33,7 +29,7 @@ def get_abstract_summary(text, engine):
     
     return abstract_summary
 
-def generate_response(paragraph, abstract, engine, max_suggestions):
+def generate_response(paragraph, abstract, engine, max_suggestions, retriever):
     
     nodes = retriever.retrieve(abstract + " " + paragraph)
     context = [f"{node.metadata}: " + node.get_content() + "\n\n" for node in nodes]
@@ -75,7 +71,7 @@ def generate_response(paragraph, abstract, engine, max_suggestions):
         
     return suggestions
 
-def generate_completion_rag(text, max_suggestions, engine = "gpt-4o-mini-2024-07-18"):
+def generate_completion_rag(text, max_suggestions, retriever, engine = "gpt-4o-mini-2024-07-18"):
     """
     Get the response from the RAG model.
     """
@@ -85,7 +81,7 @@ def generate_completion_rag(text, max_suggestions, engine = "gpt-4o-mini-2024-07
     
     # Generate the response
     current_paragraph = text.split("\n\n")[-1]
-    suggestions = generate_response(current_paragraph, abstract_summary, engine, max_suggestions)
+    suggestions = generate_response(current_paragraph, abstract_summary, engine, max_suggestions, retriever)
     
     # probabilities = [random.random() for _ in range(len(suggestions))]
     # engines = [engine for _ in range(len(suggestions))]

@@ -1,14 +1,15 @@
-from llama_index.core import SimpleDirectoryReader, StorageContext, load_index_from_storage
+from llama_index.core import SimpleDirectoryReader
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import VectorStoreIndex
+import hashlib
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
 from pydantic import BaseModel
 from PyPDF2 import PdfReader
-
-from preprocess import extract_text
+from utils import update_metadata, load_paper_contents
+import json
 
 load_dotenv()
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -40,7 +41,8 @@ def extract_first_page_text(pdf_path):
 def extract_paper_metadata(path):
     text = extract_first_page_text(path)
     metadata = get_metadata(text)
-    
+    update_metadata(metadata, path, text)
+
     return {
         "title": metadata.title,
         "year": metadata.year,
@@ -49,29 +51,23 @@ def extract_paper_metadata(path):
         "file_name": os.path.basename(path),
     }
 
-embed_model = OpenAIEmbedding(model="text-embedding-3-small")
-reader = SimpleDirectoryReader(
-    input_dir="../contents/files/",
-    file_metadata=extract_paper_metadata,
-)
+def update_index(index, path):
+    global paper_contents
+    # Update the index with the new metadata
+    reader = SimpleDirectoryReader(
+        input_files=[path],
+        file_metadata=extract_paper_metadata, # also updates metadata.json
+    )
+    print(f"Processing {path}...")
+    docs = reader.load_data()
+    node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=100)
+    nodes = node_parser.get_nodes_from_documents(docs)
+    index.insert_nodes(nodes)
 
-docs = reader.load_data()
-print(f"Count of Techcrunch articles: {len(docs)}")
-print(docs[0])
-
-node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=100)
-nodes = node_parser.get_nodes_from_documents(docs)
-index = VectorStoreIndex(nodes, embed_model=embed_model, show_progress=True)
-
-index.storage_context.persist(
-    persist_dir="../contents/indexes/",
-)
-
-if __name__ == "__main__":
-    retriever = index.as_retriever(similarity_top_k=3)
-    query = "Tell me about ViT"
-
-    for node in retriever.retrieve(query):
-        print(node)
-        print(node.get_content())
-        print("===")
+def remove_nodes(index, paper_name):
+    node_ids_to_remove = []
+    for node in index.docstore.docs.values():
+        if node.metadata["title"] == paper_name:
+            node_ids_to_remove.append(node.node_id)
+            # print(node.node_id)
+    index.delete_nodes(node_ids_to_remove, delete_from_docstore=True)
