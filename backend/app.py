@@ -161,7 +161,7 @@ def remove_paper():
         paper_found = False
         for i, paper in enumerate(metadata):
             if paper['title'] == title:
-                print(f"Removing paper: {paper["title"]}")
+                print(f"Removing paper: {paper['title']}")
                 # Remove corresponding file if it exists
                 file_path = paper['file_path']
                 print(f"Removing file path: {file_path}")
