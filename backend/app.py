@@ -5,7 +5,7 @@ import warnings
 import json
 import os
 
-from rag_response import generate_completion_rag, generate_completion_zero_shot
+from rag_response import generate_completion_rag, generate_completion_zero_shot, post_analysis
 from index import update_index, remove_nodes
 from utils import load_paper_contents
 from flask import Flask, request, jsonify
@@ -24,25 +24,27 @@ FAILURE = False
 
 storage_context = StorageContext.from_defaults(persist_dir="../contents/indexes")
 index = load_index_from_storage(storage_context)
-retriever = index.as_retriever(similarity_top_k=3)
+retriever = index.as_retriever(similarity_top_k=5)
 
 @app.route('/api/suggestions', methods=['POST'])
 @cross_origin(origin='*')
 def suggestions():
-    
     content = request.json
     
     text = content['text']
     max_suggestions = content['maximumSuggestions']
     # suggestions = generate_completion(df, vectors, prompt)
     if content["useRAG"]:
-        suggestions = generate_completion_rag(text, max_suggestions, retriever)
+        thoughts, suggestions, references = generate_completion_rag(text, max_suggestions, retriever)
+        scores = post_analysis(suggestions, text)
+        
+        suggestions = [{"content": suggestion, "thoughts": thought, "references": reference, "scores": score} for (thought, suggestion, reference, score) in zip(thoughts, suggestions, references, scores)]
+        # print(suggestions)
     else:
         suggestions = generate_completion_zero_shot(text, max_suggestions)
+        suggestions = [{"content": suggestion} for suggestion in suggestions]
     
-    suggestions = [{"content": suggestion} for suggestion in suggestions]
-    
-    print(suggestions)
+    print("generated:", len(suggestions), "suggestions")
     return jsonify({
         'success': SUCCESS,
         'data': suggestions
