@@ -37,3 +37,7 @@ PyMuPDF
 Pillow
 pandas
 scikit-learn
+llama-index
+llama-index-vector-stores-qdrant
+fastembed
+qdrant-client

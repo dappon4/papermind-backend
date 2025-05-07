@@ -12,6 +12,10 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
 from llama_index.core import StorageContext, load_index_from_storage
+from qdrant_client import QdrantClient
+from llama_index.vector_stores.qdrant import QdrantVectorStore
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core import VectorStoreIndex
 
 warnings.filterwarnings("ignore", category=FutureWarning)  # noqa
 
@@ -22,8 +26,20 @@ CORS(app)  # For Access-Control-Allow-Origin
 SUCCESS = True
 FAILURE = False
 
-storage_context = StorageContext.from_defaults(persist_dir="./contents/indexes")
-index = load_index_from_storage(storage_context)
+# load index
+# storage_context = StorageContext.from_defaults(persist_dir="./contents/indexes")
+# index = load_index_from_storage(storage_context)
+embed_model = OpenAIEmbedding(model="text-embedding-3-small")
+client = QdrantClient(path="./contents/qdrant_storage")
+vector_store = QdrantVectorStore(
+    collection_name="paper_collection",
+    client=client,
+    fastembed_sparse_model="Qdrant/bm42-all-minilm-l6-v2-attentions",
+)
+index = VectorStoreIndex.from_vector_store(
+    vector_store=vector_store,
+    embed_model = OpenAIEmbedding(model="text-embedding-3-small")
+)
 retriever = index.as_retriever(similarity_top_k=5)
 
 @app.route('/api/suggestions', methods=['POST'])

@@ -251,7 +251,17 @@ def generate_completion_rag(text, max_suggestions, retriever, engine = "gpt-4o-m
         if first_word == last_word:
             suggestions[i] = suggestion.replace(first_word, "", 1).strip()
     
-    return [[thoughts]] * len(suggestions), suggestions, [[node.get_content() for node in verified_nodes]] * len(suggestions)
+    references = [
+        {
+            "title": node.metadata["title"],
+            "author": node.metadata["author"],
+            "year": node.metadata["year"],
+            "content": node.get_content()
+        }
+        for node in verified_nodes
+    ]
+    
+    return [[thoughts]] * len(suggestions), suggestions, references * len(suggestions)
 
 def generate_completion_zero_shot(text, max_suggestions, engine = "gpt-4o-mini-2024-07-18"):
     """
