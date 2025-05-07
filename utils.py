@@ -37,7 +37,7 @@ def load_paper_contents(path):
 def update_metadata(metadata, path, text):
     # update the metadata.json file with the new metadata
     
-    paper_contents = load_paper_contents("../contents/metadata.json")
+    paper_contents = load_paper_contents("./contents/metadata.json")
     
     text_hash = calculate_hash(text)
     
@@ -55,5 +55,5 @@ def update_metadata(metadata, path, text):
         "hash": text_hash,
     })
     
-    with open("../contents/metadata.json", "w") as f:
+    with open("./contents/metadata.json", "w") as f:
         json.dump(paper_contents, f, indent=4)

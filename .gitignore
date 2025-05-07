@@ -2,3 +2,5 @@ api_keys.csv
 logs/*
 venv/*
 *.pyc
+contents/files/*
+contents/metadata.json

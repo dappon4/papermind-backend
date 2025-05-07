@@ -22,7 +22,7 @@ CORS(app)  # For Access-Control-Allow-Origin
 SUCCESS = True
 FAILURE = False
 
-storage_context = StorageContext.from_defaults(persist_dir="../contents/indexes")
+storage_context = StorageContext.from_defaults(persist_dir="./contents/indexes")
 index = load_index_from_storage(storage_context)
 retriever = index.as_retriever(similarity_top_k=5)
 
@@ -79,7 +79,7 @@ def upload():
     
     try:
         # Create uploads directory if it doesn't exist
-        upload_dir = "../contents/files"
+        upload_dir = "./contents/files"
         os.makedirs(upload_dir, exist_ok=True)
         
         # Save the file
@@ -109,7 +109,7 @@ def paper_list():
     """
     Endpoint to get the list of uploaded papers
     """
-    metadata_path = "../contents/metadata.json"
+    metadata_path = "./contents/metadata.json"
     # read the metadata.json file
     if not os.path.exists(metadata_path):
         return jsonify({
@@ -148,7 +148,7 @@ def remove_paper():
                 'error': 'Paper title is required'
             }), 400
             
-        metadata_path = "../contents/metadata.json"
+        metadata_path = "./contents/metadata.json"
         # Check if metadata file exists
         if not os.path.exists(metadata_path):
             return jsonify({

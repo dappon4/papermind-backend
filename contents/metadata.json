@@ -1,0 +1,174 @@
+[
+  {
+    "title": "ANIMAGE IS WORTH 16X16 W ORDS : TRANSFORMERS FOR IMAGE RECOGNITION AT SCALE",
+    "year": 2021,
+    "author": [
+      "Alexey Dosovitskiy",
+      "Lucas Beyer",
+      "Alexander Kolesnikov",
+      "Dirk Weissenborn",
+      "Xiaohua Zhai",
+      "Thomas Unterthiner",
+      "Mostafa Dehghani",
+      "Matthias Minderer",
+      "Georg Heigold",
+      "Sylvain Gelly",
+      "Jakob Uszkoreit",
+      "Neil Houlsby"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/AN IMAGE IS WORTH 16X16 WORDS: TRANSFORMERS FOR IMAGE RECOGNITION AT SCALE.pdf",
+    "file_name": "AN IMAGE IS WORTH 16X16 WORDS: TRANSFORMERS FOR IMAGE RECOGNITION AT SCALE.pdf",
+    "hash": "f57f051c5155e3cc9ff067932c63b2a74093c20eff826e36ccc63a6fad1fbe44"
+  },
+  {
+    "title": "Attention Is All You Need",
+    "year": 2017,
+    "author": [
+      "Ashish Vaswani",
+      "Noam Shazeer",
+      "Niki Parmar",
+      "Jakob Uszkoreit",
+      "Llion Jones",
+      "Aidan N. Gomez",
+      "\u0141ukasz Kaiser",
+      "Illia Polosukhin"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/Attention Is All You Need.pdf",
+    "file_name": "Attention Is All You Need.pdf",
+    "hash": "d826da659fdf881f212f1f78857d96fe0293669585c9968f4ceaafe41ccea5bb"
+  },
+  {
+    "title": "AST: Audio Spectrogram Transformer",
+    "year": 2021,
+    "author": [
+      "Yuan Gong",
+      "Yu-An Chung",
+      "James Glass"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/Audio Transformer.pdf",
+    "file_name": "Audio Transformer.pdf",
+    "hash": "1726f02539332227d193ff68bbcec56fa4d88084a08f3052d2e9fa4eeb858172"
+  },
+  {
+    "title": "Convolution-Augmented Transformer for Semi-Supervised Sound Event Detection",
+    "year": 2020,
+    "author": [
+      "Koichi Miyazaki",
+      "Tatsuya Komatsu",
+      "Tomoki Hayashi",
+      "Shinji Watanabe",
+      "Tomoki Toda",
+      "Kazuya Takeda"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/CONVOLUTION-AUGMENTED TRANSFORMER FOR SEMI-SUPERVISED SOUND EVENT DETECTION.pdf",
+    "file_name": "CONVOLUTION-AUGMENTED TRANSFORMER FOR SEMI-SUPERVISED SOUND EVENT DETECTION.pdf",
+    "hash": "23d03347233d6dc9326e7ac3acd28a6adf6a92b4df2348113020b42d3939c144"
+  },
+  {
+    "title": "Conformer: Convolution-augmented Transformer for Speech Recognition",
+    "year": 2020,
+    "author": [
+      "Anmol Gulati",
+      "James Qin",
+      "Chung-Cheng Chiu",
+      "Niki Parmar",
+      "Yu Zhang",
+      "Jiahui Yu",
+      "Wei Han",
+      "Shibo Wang",
+      "Zhengdong Zhang",
+      "Yonghui Wu",
+      "Ruoming Pang"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/Conformer: Convolution-augmented Transformer for Speech Recognition.pdf",
+    "file_name": "Conformer: Convolution-augmented Transformer for Speech Recognition.pdf",
+    "hash": "fc6b001c6ef7c324fe72201a88924c739f594e7bf5a2b4fb61b56fa7d93328bb"
+  },
+  {
+    "title": "PANNs: Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition",
+    "year": 2020,
+    "author": [
+      "Qiuqiang Kong",
+      "Yin Cao",
+      "Turab Iqbal",
+      "Yuxuan Wang",
+      "Wenwu Wang",
+      "Mark D. Plumbley"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/PANNs: Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition.pdf",
+    "file_name": "PANNs: Large-Scale Pretrained Audio Neural Networks for Audio Pattern Recognition.pdf",
+    "hash": "b5bc22ff8a0d2942eefe2fc03f1240e016c57eeac02ca3f43c8be4413bcf3b32"
+  },
+  {
+    "title": "PSLA: Improving Audio Tagging with Pretraining, Sampling, Labeling, and Aggregation",
+    "year": 2021,
+    "author": [
+      "Yuan Gong",
+      "Yu-An Chung",
+      "James Glass"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/PSLA: Improving Audio Tagging with Pretraining, Sampling, Labeling, and Aggregation.pdf",
+    "file_name": "PSLA: Improving Audio Tagging with Pretraining, Sampling, Labeling, and Aggregation.pdf",
+    "hash": "9c937b43cdb7efee9218c168f77bec5c9f49cbb93a5ad5597267a71f14c908fa"
+  },
+  {
+    "title": "Sound Event Detection of Weakly Labelled Data With CNN-Transformer and Automatic Threshold Optimization",
+    "year": 2020,
+    "author": [
+      "Qiuqiang Kong",
+      "Yong Xu",
+      "Wenwu Wang",
+      "Mark D. Plumbley"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/Sound Event Detection of Weakly Labelled Data With CNN-Transformer and Automatic Threshold Optimization.pdf",
+    "file_name": "Sound Event Detection of Weakly Labelled Data With CNN-Transformer and Automatic Threshold Optimization.pdf",
+    "hash": "0265872c36da738be9cced60ae99bc2584a124343cc43d65360ae8c85a4f70ce"
+  },
+  {
+    "title": "Streaming keyword spotting on mobile devices",
+    "year": 2020,
+    "author": [
+      "Oleg Rybakov",
+      "Natasha Kononenko",
+      "Niranjan Subrahmanya",
+      "Mirk\u00f3 Visontai",
+      "Stella Laurenzo"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/Streaming keyword spotting on mobile devices.pdf",
+    "file_name": "Streaming keyword spotting on mobile devices.pdf",
+    "hash": "11017cf6c98982bdea675215bcbb8d86c4735215c60cd5ee35f9d286d909a276"
+  },
+  {
+    "title": "Tokens-to-Token ViT: Training Vision Transformers from Scratch on ImageNet",
+    "year": 2021,
+    "author": [
+      "Li Yuan",
+      "Yunpeng Chen",
+      "Tao Wang",
+      "Weihao Yu",
+      "Yujun Shi",
+      "Zihang Jiang",
+      "Francis E.H. Tay",
+      "Jiashi Feng",
+      "Shuicheng Yan"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/Tokens-to-Token ViT: Training Vision Transformers from Scratch on ImageNet.pdf",
+    "file_name": "Tokens-to-Token ViT: Training Vision Transformers from Scratch on ImageNet.pdf",
+    "hash": "89e77f797a8cf9e7511b4ff8fc0f01f5388ec877b367d3564714a7f58921b4b2"
+  },
+  {
+    "title": "Training data-efficient image transformers & distillation through attention",
+    "year": 2021,
+    "author": [
+      "Hugo Touvron",
+      "Matthieu Cordy",
+      "Matthijs Douze",
+      "Francisco Massa",
+      "Alexandre Sablayrolles",
+      "Herv\u00e9 J\u00e9gou"
+    ],
+    "file_path": "/home/dahong/programs/python/coauthor-interface-rag/backend/../contents/files/Training data-ef\ufb01cient image transformers & distillation through attention.pdf",
+    "file_name": "Training data-ef\ufb01cient image transformers & distillation through attention.pdf",
+    "hash": "70bb22fc82b647648c2764015e4cd4c7acf8f6766ecb88485491b038d684a05d"
+  }
+]
