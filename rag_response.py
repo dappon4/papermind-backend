@@ -185,19 +185,28 @@ def generate_completion_rag(text, max_suggestions, retriever, engine = "gpt-4o-m
     # retrieve documents based on initial suggestion and current paragraph
     refined_retrieved_nodes = retriever.retrieve(abstract_summary + " " + text.split("\n\n")[-1] + " " + initial_suggestion)
     
-    print("\n\n".join([node.get_content() for node in refined_retrieved_nodes] + [node.get_content() for node in stage_1_nodes]))
+    # print("\n\n".join([node.get_content() for node in refined_retrieved_nodes] + [node.get_content() for node in stage_1_nodes]))
+    
+    combined_retrieved_nodes = refined_retrieved_nodes + stage_1_nodes
+    unique_nodes = []
+    unique_node_contents = set()
+    # remove duplicates based on content
+    for node in combined_retrieved_nodes:
+        if node.get_content() not in unique_node_contents:
+            unique_nodes.append(node)
+            unique_node_contents.add(node.get_content())
     
     # verify if the retrieved documents are relevant to the current paragraph
-    verification_results = verify_retrieval(text, [node.get_content() for node in refined_retrieved_nodes] + [node.get_content() for node in stage_1_nodes])
-    print(verification_results, len(refined_retrieved_nodes) + len(stage_1_nodes))
+    verification_results = verify_retrieval(text, [node.get_content() for node in unique_nodes])
+    print(verification_results, len(unique_nodes))
     
     # verify if the verification list has the same length as the retrieved nodes
-    while len(verification_results) < len(refined_retrieved_nodes) + len(stage_1_nodes):
+    while len(verification_results) < len(unique_nodes):
         verification_results.append(False)
-    verification_results = verification_results[:len(refined_retrieved_nodes) + len(stage_1_nodes)]
+    verification_results = verification_results[:len(unique_nodes)]
     
     # filter out the verified nodes 
-    verified_nodes = [node for node, verified in zip(refined_retrieved_nodes, verification_results) if verified]
+    verified_nodes = [node for node, verified in zip(unique_nodes, verification_results) if verified]
     
     # generate context to pass to the model
     metadata_template = "title: {title}, authors: {author}, year: {year}"
@@ -260,8 +269,9 @@ def generate_completion_rag(text, max_suggestions, retriever, engine = "gpt-4o-m
         }
         for node in verified_nodes
     ]
+    print(len(references), "references")
     
-    return [[thoughts]] * len(suggestions), suggestions, references * len(suggestions)
+    return [[thoughts]] * len(suggestions), suggestions, [references] * len(suggestions)
 
 def generate_completion_zero_shot(text, max_suggestions, engine = "gpt-4o-mini-2024-07-18"):
     """
